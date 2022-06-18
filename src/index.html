@@ -2,16 +2,59 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles.css">
-  <title>Vanilla JavaScript App</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+  <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+  <py-env>
+    - pandas
+    - scikit-learn
+    - matplotlib
+  </py-env>
 </head>
 
-<body>
-  <main>
-    <h1>Vanilla JavaScript App</h1>
-  </main>
+<body class="container">
+  <py-script>
+    from sklearn.datasets import load_wine
+    import matplotlib.pyplot as plt
+    import pandas as pd
+
+    # Load the dataset
+    wine = load_wine()
+  </py-script>
+  <h1 class="text-3xl font-bold text-gray-800 uppercase tracking-tight">Wine recognition dataset</h1>
+  <br />
+  <h3 class="text-xl font-bold text-gray-800 uppercase tracking-tight">Color to alcohol levels</h3>
+  <br />
+  <div id="alcohol-color-plot"></div>
+  <py-script output="alcohol-color-plot">
+    plt.scatter(wine['data'][:, 0], wine['data'][:, 9], c=wine['target'])
+    plt.xlabel(wine['feature_names'][0])
+    plt.ylabel(wine['feature_names'][9])
+    plt
+  </py-script>
+  <br />
+  <h3 class="text-xl font-bold text-gray-800 uppercase tracking-tight">Malic acid levels to Hue</h3>
+  <br />
+  <div id="malic-acid-hue-plot"></div>
+  <py-script output="malic-acid-hue-plot">
+    # Extract the data
+    data = pd.DataFrame(wine['data'], columns=wine['feature_names'])
+    # Extract the target
+    target = pd.DataFrame(wine['target'], columns=['cultivator'])
+    # Combine into one dataset
+    df = pd.concat([target, data], axis='columns')
+    
+    # Plot
+    plt.clf()
+    plt.cla()
+    plt.scatter(df['hue'], df['malic_acid'], c=df['cultivator'])
+    plt.title('Wine recognition dataset')
+    plt.xlabel('hue')
+    plt.ylabel('malic_acid')
+    plt
+  </py-script>
 </body>
 
 </html>
